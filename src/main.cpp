@@ -25,20 +25,27 @@ namespace PhysLab
   private:
     void DetectChangingRow()
     {
-      char chr;
-      fstr.read(&chr,sizeof(char));
-      std::string str(&chr);
-      while(str.compare(std::string("\n")))
+      char chr[1];
+      fstr.read(chr,sizeof(chr));
+      std::string str(chr);
+      while(str.compare(std::string("\n"))==0)
       {
-        fstr.read(&chr,sizeof(char));
-        str = std::string(&chr);
+        fstr.read(chr,sizeof(chr));
+        str = std::string(chr);
+	std::cout << str << std::endl;
       }
    
     }
     template<typename DataType>
     void PrintData(DataType data)
     {
-       std::cout << "Number : " << std::setw(5) << Counter++ <<" : " <<data << std::endl;
+      std::cout <<
+	// "Number : " <<
+	std::setw(5) << Counter++ <<"\t" ;
+      std::cout//  << 
+	// std::hex<<
+	//std::setw(4)
+	<<	(int)data << std::endl;
     }
  
   public:
@@ -68,14 +75,13 @@ namespace PhysLab
   };
   struct DataRow
   {
-     double A;
-     char   B;
+     char A;
      friend std::ostream& operator <<(std::ostream& os,const DataRow& data)
      {
-       return os << data.A;
+       return os << (int)data.A;
      }
   }__attribute__ ((__packed__));
-  
+  /*
   class DataConverter
   {
    DataRow OneLineData;
@@ -96,20 +102,33 @@ namespace PhysLab
     }
     
   };
-
+  */  
 
 }
 
 
 int main()
 {
-  PhysLab::Reader Rdr("FileTest.bny");
+  for(int folderloop = 1;folderloop < 4;folderloop++)
+  {
+   for(int fileloop = 1;fileloop < 41;fileloop++)
+    {
+     std::string FileName("CHAOS");
+     FileName += std::to_string(folderloop);
+     std::string FilePath;
+     FilePath += FileName;
+     FilePath += std::string("/bny/");
+     FilePath += FileName +std::string("_")+ std::to_string(fileloop);
+     FilePath += std::string(".bny");
   
-  Rdr.ReadHeader();
-  
-  char a,tab; 
-  Rdr.ReadData(  a,PhysLab::PrintType::OutputConsole);
-  Rdr.ReadData(tab,PhysLab::PrintType::OutputConsole);
+     PhysLab::Reader Rdr(FilePath.c_str());
+     char d1;
+     for(int i =0 ; i< 10000000;i++)
+     {
+      Rdr.ReadData(d1,PhysLab::PrintType::OutputConsole);
+     }
+    }
+  }
   return 0;
 
 }
