@@ -15,9 +15,9 @@ namespace PhysLab
     std::fstream fstr;
     int Counter = {0};
   public:
-    Reader(std::string Filename)
+    Reader(std::string FileName)
     {
-      fstr.open(Filename.c_str(),std::ios::in|std::ios::binary);
+      SetPath(FileName);
     }
     Reader()
     {
@@ -49,6 +49,10 @@ namespace PhysLab
     }
  
   public:
+    void SetPath(std::string path)
+    {
+      fstr.open(path.c_str(),std::ios::in|std::ios::binary);
+    }
     void ReadHeader()
     { 
       for(int i = 0 ;i < 5; i++)
@@ -109,6 +113,7 @@ namespace PhysLab
 
 int main()
 {
+  PhysLab::Reader Rdr;
   for(int folderloop = 1;folderloop < 4;folderloop++)
   {
    for(int fileloop = 1;fileloop < 41;fileloop++)
@@ -121,7 +126,7 @@ int main()
      FilePath += FileName +std::string("_")+ std::to_string(fileloop);
      FilePath += std::string(".bny");
   
-     PhysLab::Reader Rdr(FilePath.c_str());
+     Rdr.SetPath(FilePath.c_str());
      char d1;
      for(int i =0 ; i< 10000000;i++)
      {
